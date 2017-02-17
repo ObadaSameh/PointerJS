@@ -7,14 +7,14 @@ var gulp = require('gulp')
 var clean = require('gulp-clean');
 
 gulp.task('clean', function () {
-    return gulp.src('./dist/**/*', { read: false })
+    return gulp.src(['./dist/**/*', './examples/**/*'], { read: false })
         .pipe(clean());
 });
 
 gulp.task('copy-html', function () {
     gulp.src('./src/examples/*.html')
-        .pipe(htmlreplace({ compile: '../js/pointer.min.js' }))
-        .pipe(gulp.dest('./dist/html'));
+        .pipe(htmlreplace({ compile: '../dist/pointer.min.js' }))
+        .pipe(gulp.dest('./examples'));
 });
 
 gulp.task('minify-js', function () {
@@ -26,7 +26,7 @@ gulp.task('minify-js', function () {
 
     gulp.src(files) // path to your files
         .pipe(uglify())
-        .pipe(concat('/js/pointer.min.js'))
+        .pipe(concat('/pointer.min.js'))
         .pipe(gulp.dest('./dist'));
 });
 
