@@ -1,0 +1,117 @@
+<html>
+
+<head>
+    <!-- build:compile -->
+    <script src="../js/index.js"></script>
+    <script src="../js/utility.js"></script>
+    <script src="../js/capture.js"></script>
+    <!-- endbuild -->
+</head>
+
+<body>
+    <style>
+        #rct { 
+            left : 0px;
+            top : 0px;
+            position:absolute;
+            background : red;
+        }
+
+        .rsz-point {
+            background: white;
+            border: black 1.5px solid;
+            border-radius : 2px;
+            width : 8px;
+            height : 8px;
+            position : absolute;
+        } 
+
+    </style>
+
+<div id="rct">
+</div>
+
+<div id="bottom" class="rsz-point">
+</div>
+<div id="right" class="rsz-point">
+</div>
+
+<script>
+    var p = { x: 0, h: 0 };
+    var sz = { w: 300, h: 200 };
+
+    var rct = document.getElementById('rct');
+    var btm = document.getElementById('bottom');
+    var rht = document.getElementById('right');
+
+    var setPositions = function () {
+        btm.style.left = sz.w / 2 - 5;
+        btm.style.top = sz.h - 5; // current width - (width / 2 + border-width / 2)
+
+        rht.style.left = sz.w - 5;
+        rht.style.top = sz.h / 2 - 5;
+
+        rct.style.width = sz.w + "px";
+        rct.style.height = sz.h + "px";
+
+    }
+
+    var mouseDown = function (event) {
+        console.log("mousedown");
+        console.log(event);
+        p = { x: event.clientX, y: event.clientY };
+
+        PointerJS.CaptureHelper.capture(event.currentTarget);
+        console.log(event.currentTarget);
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    var rightCaptureMouseMove = function (event) {
+        console.log("rightCaptureMouseMove");
+        var pp = { x: event.clientX, y: event.clientY };
+        sz.w += pp.x - p.x;
+        p = pp;
+        setPositions();
+
+        if (event.originalEvent) {
+            event.originalEvent.preventDefault();
+            event.originalEvent.stopPropagation();
+        }
+
+    }
+
+    var bottomCaptureMouseMove = function (event) {
+        console.log("bottomCaptureMouseMove");
+        var pp = { x: event.clientX, y: event.clientY };
+        sz.h += pp.y - p.y;
+        p = pp;
+        setPositions();
+
+        if (event.originalEvent) {
+            event.originalEvent.preventDefault();
+        }
+    }
+    var captureMouseUp = function (event) {
+        console.log("capturemouseup");
+        PointerJS.CaptureHelper.release();
+        if (event.originalEvent) {
+            event.originalEvent.preventDefault();
+        }
+    }
+
+    rht.addEventListener('mousedown', mouseDown);
+    rht.addEventListener('capturemousemove', rightCaptureMouseMove);
+    rht.addEventListener('capturemouseup', captureMouseUp);
+
+    btm.addEventListener('mousedown', mouseDown);
+    btm.addEventListener('capturemousemove', bottomCaptureMouseMove);
+    btm.addEventListener('capturemouseup', captureMouseUp);
+
+    setPositions();
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+<html>
+
+<head>
+
+</head>
+
+<bodY>
+
+    <script>
+
+        var lastPointerPosition = { x: 0, y: 0 };
+        var captured = null;
+        var call = function (e) {
+            lastPointerPosition.x = e.clientX;
+            lastPointerPosition.y = e.clientY;
+            if (captured) {
+                // do some logic
+                var s = 1;
+            }
+        }
+
+        var time;
+        time = new Date().getTime();
+
+        for (var i = 0; i < 100000000; i++) {
+            call({ clientX: 0, clientY: 0 });
+        }
+
+        time = new Date().getTime() - time;
+        console.log("execution takes " + time / 1000 + " seconds");
+        time = new Date().getTime();
+
+    </script>
+
+</bodY>
+
+</html>

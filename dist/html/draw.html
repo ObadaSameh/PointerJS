@@ -1,0 +1,92 @@
+<html>
+
+<head>
+    <script src="../js/pointer.min.js"></script>
+
+</head>
+
+<body>
+    <style>
+
+        #container {
+            left:0px;
+            top : 0px;
+            width : 300px;
+            height : 300px;
+            background : gray;
+            cursor: pointer;
+        }
+        #rct { 
+            left : 0px;
+            top : 0px;
+            position:absolute;
+            background : red;
+        }
+
+    </style>
+
+<div id="container">
+    <div id="rct">
+    </div>
+</div>
+
+<script>
+    var clientPosition = { x: 0, y: 0 };
+    var pos = { x: 0, y: 0 };
+    var sz = { w: 0, h: 0 };
+
+    var rct = document.getElementById('rct');
+    var cont = document.getElementById('container');
+
+    var setRect = function () {
+        console.log("setRect");
+        var x, y, r, b, w, h;
+
+        x = Math.min(pos.x, pos.x + sz.w);
+        y = Math.min(pos.y, pos.y + sz.h);
+        r = Math.max(pos.x, pos.x + sz.w);
+        b = Math.max(pos.y, pos.y + sz.h);
+
+        w = r - x;
+        h = b - y;
+
+        rct.style.left = x + "px";
+        rct.style.top = y + "px";
+        rct.style.width = w + "px";
+        rct.style.height = h + "px";
+    }
+
+    var contMouseDown = function (event) {
+        console.log("mousedown");
+        console.log(event);
+        clientPosition = { x: event.clientX, y: event.clientY };
+        pos = { x: event.x, y: event.y };
+        sz = { w: 0, h: 0 };
+
+        setRect();
+
+        PointerJS.CaptureHelper.capture(cont);
+    }
+
+    var contCaptureMouseMove = function (event) {
+        console.log("capturemousemove");
+        var p = { x: event.clientX, y: event.clientY };
+        sz.w = p.x - clientPosition.x;
+        sz.h = p.y - clientPosition.y;
+        setRect();
+    }
+
+    var contCaptureMouseUp = function (event) {
+        console.log("capturemouseup");
+        PointerJS.CaptureHelper.release();
+    }
+
+    cont.addEventListener('mousedown', contMouseDown);
+    cont.addEventListener('capturemousemove', contCaptureMouseMove);
+    cont.addEventListener('capturemouseup', contCaptureMouseUp);
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<html>
+
+<head>
+    <!-- build:compile -->
+    <script src="../js/index.js"></script>
+    <script src="../js/utility.js"></script>
+    <script src="../js/capture.js"></script>
+    <!-- endbuild -->
+</head>
+
+<body>
+    <style>
+
+        .dv { 
+            left:0px;
+            top : 0px;
+            width : 100px;
+            height : 100px;
+            position:absolute;
+            background : red;
+        }
+
+    </style>
+
+<div id="dv" class="dv">
+</div>
+
+<script>
+
+    var lp = { x: 0, y: 0 };
+    var p = { x: 0, y: 0 };
+
+    var dvMouseDown = function (event) {
+        console.log("mousedown");
+        p = { x: event.clientX, y: event.clientY };
+        PointerJS.CaptureHelper.capture(event.target);
+    }
+
+    var dvCaptureMouseMove = function (event) {
+        console.log("capturemousemove");
+        var pp = { x: event.clientX, y: event.clientY };
+        //  console.log(event);
+        lp = { x: lp.x + pp.x - p.x, y: lp.y + pp.y - p.y }
+        p = pp;
+        event.target.style.left = lp.x + "px";
+        event.target.style.top = lp.y + "px";
+    }
+
+    var dvCaptureMouseUp = function (event) {
+        console.log("capturemouseup");
+        PointerJS.CaptureHelper.release();
+    }
+
+    var dv = document.getElementById('dv');
+
+    dv.addEventListener('mousedown', dvMouseDown);
+    dv.addEventListener('capturemousemove', dvCaptureMouseMove);
+    dv.addEventListener('capturemouseup', dvCaptureMouseUp);
+
+</script>
+
+</body>
+
+</html>
